@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <title>Fake Kimie Detail</title>
+    <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/narmalize/3.0.3/normalize.min.css">
+    <script src="https://use.fontawesome.com/f3626566ff.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/styles.css">
+</header>
+<body>
+	<h2>MovieID is now <%= movieId %> </h2>
+	<h2>Movie Title is now <%= rows[0].movie_title %> </h2>
+   <header id ="top_header" class="clearfix">
+        <div class="wrapper">
+            <img src="../../logoblack.png" alt="" class="logo" width="246" height="40">
+            <nav id="main_nav">
+                <a href="#">Home</a>
+                <a href="#">Category</a>
+                <a href="#">Sign in/out</a>
+            </nav>
+        </div>
+    </header>
+    
+	<section id="banner" class="clearfix">
+        <div id="banner_content_wrapper">
+            <div id="trailer">
+                    <iframe width="672" height="378" src="<%= rows[0].trailer_url %>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			
+            </div>
+            <div id="content">
+                <h2 class="title"><%= rows[0].movie_title %></h2>
+                <div class="ratings">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star inactive"></i>
+                </div>
+                <!--how to set up rating https://stackoverflow.com/questions/3253436/how-can-i-change-the-color-of-the-stars-on-mouse-hover-in-this-js-->
+                <p class="description"><%= rows[0].movie_description %></p>
+                <p class="director">Director: <%= rows[0].movie_director %></p>
+                <p class="writer">language: <%= rows[0].movie_language %></p>
+                <p class="starts">Stars:  <%= rows[0].movie_actors %> </p>
+                <p class="info">R <span>|</span> 109 mins <span>|</span> Action, Sci-fi</p>
+            </div>
+        </div>
+    </section>
+    <section id="top_movies" class="clearfix">
+        <div class="wrapper">
+            <header class="clearfix">
+                <h2>More Like This..</h2>
+                <a href="#" class="view_more">View All Movies</a>
+            </header>
+        </div>
+
+        <div class="row">
+            <div class="post">
+                <img src="../../deadpool.jpg" alt="Deadpool Posters">
+                <h3 class="title">Deadpool</h3>
+                <p class="post_info">R | 109 Minutes</p>
+            </div>
+    
+            <div class="post">
+                <img src="../../deadpool.jpg" alt="Deadpool Posters">
+                <h3 class="title">Deadpool</h3>
+                <p class="post_info">R | 109 Minutes</p>
+            </div>
+            
+            <div class="post">
+                <img src="../../deadpool.jpg" alt="Deadpool Posters">
+                <h3 class="title">Deadpool</h3>
+                <p class="post_info">R | 109 Minutes</p>
+            </div>
+
+            <div class="post">
+                <img src="../../deadpool.jpg" alt="Deadpool Posters">
+                <h3 class="title">Deadpool</h3>
+                <p class="post_info">R | 109 Minutes</p>
+            </div>
+
+            <div class="post">
+                <img src="../../deadpool.jpg" alt="Deadpool Posters">
+                <h3 class="title">Deadpool</h3>
+                <p class="post_info">R | 109 Minutes</p>
+            </div>
+
+            <div class="post">
+                <img src="../../deadpool.jpg" alt="Deadpool Posters">
+                <h3 class="title">Deadpool</h3>
+                <p class="post_info">R | 109 Minutes</p>
+            </div>
+        </div>
+    </section>
+    <section id="newsletter">
+        <div class="newsletter_inner">
+            <h2>Get movieradar latest updates each week.</h2>
+            <div class="sign_up_form">
+                <input type="text" placeholder="First Name">
+                <input type="text" placeholder="Email">
+                <button class="button">Subscribe</button>
+            </div>
+        </div>
+
+    </section>
+	
+    <footer id="main_footer">
+        <p class="logo">movieradar</p>
+        <p class="copyright">&copy;2019 movieradar. All Right Reserved.</p>
+        <div class="links">
+            <a href="#">Terms of Services</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+
+    </footer>
+</body> 
+</html>
