@@ -6,17 +6,17 @@
   <body>
     <form class="form-signin" action = "/user" method = "POST">
       <div class="text-center mb-4">
-        <img class="mb-4" src="logoblack.png" alt="" width="288" height="72">
+        <img class="mb-4" src="logoblack.png" alt="" width="369" height="60">
         <h1 class="h4 mb-3 font-weight-normal" style="color:dimgray">Connect with your favorite movies</h1>
       </div>
 
       <div class="form-label-group">
         <input type="text" id="inputName" class="form-control" name = "userName" placeholder="Username" required autofocus>
-        <label for="inputEmail">Username</label>
+        <label for="inputName">Username</label>
       </div>
 
       <div class="form-label-group">
-        <input type="email" id="inputEmail" class="form-control" name = "email" placeholder="Email address" required autofocus>
+        <input type="email" id="inputEmail" class="form-control" name = "email" placeholder="Email address" required>
         <label for="inputEmail">Email address</label>
       </div>
 
@@ -26,7 +26,7 @@
       </div>
 
       <div>
-        <p>Already on movideradar? <a href="/signin">Log in now >></a></p>
+        <p class="mt-4 mb-3 text-muted text-center">Already on movideradar? <a href="/signin">Log in now >></a></p>
       </div>
 
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>

@@ -1,21 +1,43 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({extended:true}));
 
-const db = require('./models/alldbfunctions');
+app.set('view engine', 'ejs');
 
+var passport = require('passport'),
+	localStrategy = require('passport-local');
+
+const db = require('./models/alldbfunctions');
+app.use(passport.initialize());
+app.use(passport.session());
+
+/* 网上样板，放着参考
+app.post('/api/login', passport.authenticate('local'), users.login);
+*/
 
 /* Please keep the following statement, this one is working sample.
 app.post('/user', db.createUser);
 */
 
-
 app.post('/user', db.createUser);
-
 app.use(express.static(__dirname + "/public"));
 
+// Above this line, are the setting syntax.
+// Below this line, are the routes.
 
+/* 网上样板，放着参考
+app.get(‘/login’, function (req, res, next) {
+ if (req.isAuthenticated()) {
+ res.redirect(‘/account’);
+ }
+ else{
+ res.render(‘login’, {title: “Log in”, userData: req.user, messages: {danger: req.flash(‘danger’), warning: req.flash(‘warning’), success: req.flash(‘success’)}});
+ }
+*/
 
 app.get('/', (req, res) => {
 	res.send("Our capstone -- try app listen on port ");
@@ -31,7 +53,30 @@ app.get('/signin', (req, res) => {
 	res.render("signin.ejs");
 });
 
+app.get('/detail', (req, res) => {
+	
+	res.render("detail.ejs");
+});
+
+// 备用的detail route，迟早要换成这个
+// app.get('/detail/:movieId', (req, res) => {
+	
+// 	res.render("detail.ejs");
+// });
+
+/* fake render movie detail page */
+app.get('/fakedetail/:movieId', db.trydetail);
+
+/* fake movie detail post page */
+app.post('/kimietrydetail', (req, res)=>{
+	var movieId = req.params.movieId;
+	console.log("id is " + params);
+	//db.trydetail(id, req, res);
+});
+
+
 app.post('/signin', db.signin);
+//app.post('/detail', db.getMovieDetail);
 
 app.get('/forkimietrythings/:thing', (req, res) => {
 	var thing = req.params.thing;
@@ -39,21 +84,24 @@ app.get('/forkimietrythings/:thing', (req, res) => {
 	res.render("kimietry.ejs", {thingVar: thing});
 });
 
-app.get('/posts', (req, res) => {
-	var post = [
-		{title: "dear dear", author: "kimie"},
-		{title: "there there", author: "kimie1"},
-		{title: "call me dad dad", author: "kimie2"}		
-	]
-	res.render("trypost.ejs",{posts:post});
+app.get('/posts', db.tryHomePage);
+
+app.get('/secret', (req, res) => {
+	res.render('secret');
 });
+
+
+
 
 app.listen(3000, () => {
 	console.log('server is now listening to port 3000');
 });
 
+
+
+
 /*
-app.listen(process.env.PORT, process.env.IP, function(){
+app.listen(process.env.PORT, process.env.IP, (req, res) =>{
 	console.log('server is now listening to port env.port');
 });
 */

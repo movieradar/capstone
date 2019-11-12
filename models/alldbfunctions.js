@@ -21,11 +21,65 @@ const createUser = (request, response) => {
 		  throw error;
 		} else {
 			console.log("yay");
+			response.redirect('/signin');
 		}
     //response.status(201).send(`User added with ID: ${result.insertId}`)
-	response.redirect('/signin');
 	});
 };
+
+const getMovieDetail = (request, response) => {
+  const id = parseInt(request.params.id)
+
+  pool.query('SELECT * FROM movie WHERE id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+};
+
+function trydetail(req, res){
+	
+	var movieId = req.params.movieId;
+	
+	pool.query('SELECT * FROM movie WHERE movie_id = $1', [movieId], (error, results) => {
+		if (error) {
+			console.log(error);
+			throw error;
+		} else {
+			console.log(results.rows);
+			var rows = results.rows;
+			var title = results.rows[0].movie_title;
+			console.log(title);
+			res.render("fakedetail.ejs", {movieId: movieId, rows:rows});
+		}
+  });
+}
+
+function tryHomePage(req, res){
+		
+	pool.query('SELECT * FROM movie ORDER BY RANDOM() LIMIT 1', (error, results) => {
+		
+		var post = [
+			{title: "dear dear", author: "kimie"},
+			{title: "there there", author: "kimie1"},
+			{title: "This is the home page", author: "kimie2"}		
+		];
+		
+		if (error) {
+			console.log(error);
+			throw error;
+		} else {
+			console.log(results.rows);
+			var rows = results.rows;
+			var movie_id = results.rows[0].movie_id;
+			var poster_url = results.rows[0].poster_url;
+			console.log(movie_id);
+			res.render("trypost.ejs",{posts:post, movie_id: movie_id, poster_url: poster_url});
+		}
+  });
+}
+
 
 /* problem for this function is we don't know the result for this query, */
 const signin = (request, response) => {
@@ -107,7 +161,11 @@ const createUser = (request, response) => {
 */
 
 module.exports = {
-  createUser,signin
+  createUser,
+  getMovieDetail,
+  signin,
+	trydetail,
+	tryHomePage
 }
 
 //pool.end().then(() => console.log('pool has ended'))

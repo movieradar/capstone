@@ -1,4 +1,6 @@
 
+
+<body>
 	Hi , this is try page.
 
 <p>thingVar is now <%= thingVar %> </p>
@@ -9,5 +11,26 @@
 <% } else { %>
 	<p> Bad choice! Enter again.</p>
 <% } %>
+
+    <form class="form-signin" action = "/kimietrydetail" method = "POST">
+      <div class="text-center mb-4">
+        <img class="mb-4" src="logoblack.png" alt="" width="369" height="60">
+        <h1 class="h4 mb-3 font-weight-normal" style="color:dimgray">Connect with your favorite movies</h1>
+      </div>
+
+      <div class="form-label-group">
+        <input type="text" id="inputName" class="form-control" name = "userName" placeholder="Username" autofocus>
+        <label for="inputName">Username</label>
+      </div>
+
+      <div>
+        <p class="mt-4 mb-3 text-muted text-center">Already on movideradar? <a href="/signin">Log in now >></a></p>
+      </div>
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Try this</button>
+      <p class="mt-4 mb-3 text-muted text-center">By continuing, you agree to movieradar’s Terms of Service and acknowledge movieradar’s Privacy Policy.</p>
+      <p class="mt-5 mb-3 text-muted text-center">&copy; 2019</p>
+    </form>
+  </body>
 
 
