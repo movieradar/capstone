@@ -1,10 +1,21 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+var session = require('express-session');
+
+var jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+const { window } = new JSDOM();
+const { document } = (new JSDOM('')).window;
+global.document = document;
+
+var $ = jQuery = require('jquery')(window);
 
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({extended:true}));
+
+app.use(session({ secret: 'keyboard kimie', cookie: { maxAge: 60000 }}))
 
 app.set('view engine', 'ejs');
 
@@ -43,6 +54,8 @@ app.get('/', (req, res) => {
 	res.send("Our capstone -- try app listen on port ");
 });
 
+app.get('/homepage', db.realHomePage);
+
 app.get('/regis', (req, res) => {
 	
 	res.render("register.ejs");
@@ -53,24 +66,30 @@ app.get('/signin', (req, res) => {
 	res.render("signin.ejs");
 });
 
+app.get('/logout', db.logout);
+
 app.get('/detail', (req, res) => {
 	
 	res.render("detail.ejs");
 });
 
-// 备用的detail route，迟早要换成这个
-// app.get('/detail/:movieId', (req, res) => {
+app.get('/tryratingdetail', (req, res) => {
 	
-// 	res.render("detail.ejs");
-// });
+	res.render("tryratingdetail.ejs");
+});
 
-/* fake render movie detail page */
-app.get('/fakedetail/:movieId', db.trydetail);
+
+// 备用的detail route，迟早要换成这个
+// app.get('/detail/:movieId', db.trydetail);
+
+/* render movie detail page */
+app.get('/realdetail/:movieId', db.trydetail);
 
 /* fake movie detail post page */
 app.post('/kimietrydetail', (req, res)=>{
 	var movieId = req.params.movieId;
 	console.log("id is " + params);
+	res.render("detail.ejs");
 	//db.trydetail(id, req, res);
 });
 

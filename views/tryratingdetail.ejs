@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <title>Movie Detail</title>
+    <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/narmalize/3.0.3/normalize.min.css">
+    <script src="https://use.fontawesome.com/f3626566ff.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/styles.css">
+	<script>
+		$(document).ready(function(){
+			stars = ['off','off','off','off','off','off'];  
+			clearRating();
+
+			$('#star1').click(function(){ rateTheStar(1);});
+			$('#star2').click(function(){ rateTheStar(2);});
+			$('#star3').click(function(){ rateTheStar(3);});
+			$('#star4').click(function(){ rateTheStar(4);});
+			$('#star5').click(function(){ rateTheStar(5);});
+		});
+		
+		function clearRating()  {
+			count = 1;
+			for(count = 1; count <= 5; count++) {
+				strTarget = '#star'+count+' i';
+				$(strTarget).css("color","black");
+    		}
+		}
+		
+		function rateTheStar(targetno)  {
+			console.log("yes we are here");
+			if(stars[targetno] == 'off')    {
+
+				target = '';
+				//i = 0;
+				//j = 0;
+
+				for(j = 1; j <= targetno; j++)  {
+					target = '#star'+j+' i';
+					stars[j] = 'on';
+					$(target).css("color","orange");
+				}
+				document.getElementById('ratingval').value = targetno;
+				for(i = targetno+1; i <= 5; i++)    {
+					stars[i] = 'off';
+					str = '#star'+i+' i';
+					$(str).css("color","black");
+					//$(str).animate({'opacity':0},'slow');
+				}
+				alert("Your rating for this movie is " + targetno);
+				//alert(stars[1]+" "+stars[2]+" "+stars[3]+" "+stars[4]+" "+stars[5]);
+			}
+			else if(stars[targetno] == 'on')    {
+				document.getElementById('ratingval').value = targetno;
+				i = 0;
+				for(j = 1; j <= targetno; j++)  {
+					target = '#star'+j+' i';
+					stars[j] = 'on';
+					//$(str).animate({'opacity':1},'slow');
+					$(target).css("color","orange");
+				}
+				newTargetNo = targetno + 1;
+				for(i = targetno + 1; i <= 5; i++)   {
+					str = '#star'+i+' i';
+					stars[i] = 'off';
+					$(str).css("color","black");
+					//$(str).animate({'opacity':0},'slow');
+				}
+				alert("Your rating for this movie is else if" + targetno);
+			}
+    	}
+	
+	</script>
+</header>
+<body>
+    <header id ="top_header" class="clearfix">
+        <div class="wrapper">
+            <img src="logoblack.png" alt="" class="logo" width="246" height="40">
+            <nav id="main_nav">
+                <a href="#">Home</a>
+                <a href="#">Category</a>
+                <a href="#">Sign in/out</a>
+            </nav>
+        </div>
+    </header>
+    <section id="banner" class="clearfix">
+        <div id="banner_content_wrapper">
+            <div id="trailer">
+                    <iframe width="672" height="378" src="https://www.youtube.com/embed/20bpjtCbCz0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div id="content">
+                <h2 class="title">Deadpool (2016)</h2>
+                <div class="ratings">
+                  	<span id = "star1"><i class="fa fa-star"></i></span>	
+					<span id = "star2"><i class="fa fa-star"></i></span>
+                    <span id = "star3"><i class="fa fa-star"></i></span>
+					<span id = "star4"><i class="fa fa-star"></i></span>
+					<span id = "star5"><i class="fa fa-star"></i></span>
+                </div>
+				<input type="hidden" name="ratingval" id="ratingval" value="0" />
+                <!--how to set up rating https://stackoverflow.com/questions/3253436/how-can-i-change-the-color-of-the-stars-on-mouse-hover-in-this-js-->
+                <p class="description">A wisecracking mercenary gets experimented on and becomes immortal but ugly, and sets out to track down the man who ruined his looks.</p>
+                <p class="director">Director: Tim Miller</p>
+                <p class="writer">Writer: Rhett Reese, Paul Wernick</p>
+                <p class="starts">Starts:  Ryan Reynolds, Morena Baccarin, T.J. Miller </p>
+                <p class="info">R <span>|</span> 109 mins <span>|</span> Action, Sci-fi</p>
+            </div>
+        </div>
+    </section>
+
+</body> 
+	
+</html>
