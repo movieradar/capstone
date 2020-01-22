@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 var session = require('express-session');
 
 var jsdom = require("jsdom");
+var React = require('react');
+var ReactDOM = require('react-dom');
 const { JSDOM } = jsdom;
 const { window } = new JSDOM();
 const { document } = (new JSDOM('')).window;
