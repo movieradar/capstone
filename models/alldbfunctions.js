@@ -106,24 +106,49 @@ function tryHomePage(req, res){
 
 
 
-
 function trydetail(req, res){
 	
 	var movieId = req.params.movieId;
+	var rows = 0;
 	
-	pool.query('SELECT * FROM movie WHERE movie_id = $1', [movieId], (error, results) => {
+	pool.query('select m.movie_id, r.recommended_movie_id, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from recommendations_movie r, (select movie_id, original_title, overview, director, spoken_languages, casting, runtime, genres from movies where movie_id = 5) as m where r.movie_id = m.movie_id;', (error, results) => {
 		if (error) {
 			console.log(error);
 			throw error;
 		} else {
-			console.log(results.rows);
-			var rows = results.rows;
-			//var title = results.rows[0].movie_title;
+			//console.log(results.rows);
+			//rows = results.rows;
+			var title = results.rows[0].original_title;
+			//console.log(results.rows[0].recommended_movie_id)
 			//console.log(title);
+			this.rows = results.rows;
 			res.render("realdetail.ejs", {movieId: movieId, rows:rows});
 		}
-  });
+  	});	
+	console.log(rows);
+	
 }
+
+
+
+/* test if trydetail funciton can call this func. now is useless
+function renderDetail(req, res, rows){
+	pool.query('SELECT * FROM recommendations_movie WHERE movie_id = 2'), (error, results)=>{
+				if (error) {
+					console.log(error);
+					throw error;
+				} else {
+					console.log("YEs 202020202020!!!");
+					//console.log(results.rows);
+					var rows2 = results.rows;
+					//var title = results.rows[0].movie_title;
+					//console.log(title);
+					res.render("realdetail.ejs", {movieId: movieId, rows: rows, rows2:rows2});
+				}
+		
+			}
+}
+*/
 
 const getMovieDetail = (request, response) => {
   const id = parseInt(request.params.id)
@@ -137,7 +162,9 @@ const getMovieDetail = (request, response) => {
 };
 
 
-
+function inputcomment(req,res){
+	
+}
 
 /* https://node-postgres.com/api/result, can solve the problem stated above in const signin, but cannot catch error 
 const { Pool } = require('pg')
@@ -200,7 +227,8 @@ module.exports = {
 	trydetail,
 	tryHomePage,
 	realHomePage,
-	logout
+	logout,
+	inputcomment
 }
 
 //pool.end().then(() => console.log('pool has ended'))

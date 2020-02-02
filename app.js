@@ -6,6 +6,7 @@ var session = require('express-session');
 var jsdom = require("jsdom");
 var React = require('react');
 var ReactDOM = require('react-dom');
+//var Hello = require('./components/Hello');
 const { JSDOM } = jsdom;
 const { window } = new JSDOM();
 const { document } = (new JSDOM('')).window;
@@ -86,6 +87,8 @@ app.get('/tryratingdetail', (req, res) => {
 
 /* render movie detail page */
 app.get('/realdetail/:movieId', db.trydetail);
+
+app.post('/inputcomment', db.inputcomment);
 
 /* fake movie detail post page */
 app.post('/kimietrydetail', (req, res)=>{
