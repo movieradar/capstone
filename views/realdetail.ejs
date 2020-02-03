@@ -76,9 +76,10 @@
                      <img src="https://s3.amazonaws.com/uifaces/faces/twitter/BillSKenney/73.jpg">
                  </div><!-- the input field --><div class="input_comment">
 <!-- Kimienoteeeeee: create comment 的form在此！！ -->
-				 <form action = "/inputcomment" method = "POST">
-                     <input type="text" placeholder="Join the conversation..">
-
+				 <form action = "/inputcomment/<%=rows[0].movie_id %>" method = "POST">
+                     <input id = "newcomment" name = "newcomment" type="text" placeholder="Join the conversation..">
+					<input type="hidden" id="rows" name = "rows" value = "<%= rows %>">
+					 <input type="hidden" id="commentNow" name = "commentNow" value = "<%= commentNow %>" >
 					 <input type = 'submit' class="button" VALUE = "SUBMIT">
 				 </form>
 <!-- Kimienoteeeeee:  create comment 的form在此！！ -->
@@ -91,10 +92,10 @@
 
 
    <!--   Comment Begin -->
-    <% for(var i = 0; i < 1; i++){ %>
+   
         <!-- new comment -->
              <div class="new_comment">
-    
+     <% for(var i = 0; i < commentNow.length; i++){ %>
                 <!-- build comment -->
                  <ul class="user_comment">
     
@@ -102,7 +103,7 @@
                      <div class="user_avatar">
                          <img src="https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/73.jpg">
                      </div><!-- the comment body --><div class="comment_body">
-                         <p>Deadpool is a hilariously entertaining film that works mainly because of Reynolds himself. His comedic skills pay off gloriously as the titular character, who gives so many quips in one instance that some jokes will be missed. </p>
+                         <p><%= commentNow[i]%> </p>
                      </div>
     
                      <!-- comments toolbar -->
@@ -127,10 +128,10 @@
                      </div>
     
                  </ul>
-    
+    		   <% } %>
             </div>
         </div>
-    <% } %>
+ 
 	
 	
     <section id="newsletter">

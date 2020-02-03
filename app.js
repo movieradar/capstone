@@ -1,7 +1,14 @@
 const express = require('express');
 const app = express();
+
 const bodyParser = require('body-parser');
+//var jsonParser = bodyParser.json()
+//var urlencodedParser = bodyParser.urlencoded({ extended: false })
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
 var session = require('express-session');
+//app.use(session({secret:'XASDASDA'}));
+//app.use(express.urlencoded({ extended: false })); // https://stackoverflow.com/questions/47575177/express-req-body-is-empty-in-form-submission
 
 var jsdom = require("jsdom");
 var React = require('react');
@@ -14,12 +21,21 @@ global.document = document;
 
 var $ = jQuery = require('jquery')(window);
 
-app.use(bodyParser.json());
 
-app.use(bodyParser.urlencoded({extended:true}));
 
-app.use(session({ secret: 'keyboard kimie', cookie: { maxAge: 60000 }}))
 
+
+app.use(session({ secret: 'keyboard kimie', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true}));
+/* 另一个session的写法 https://github.com/expressjs/session/issues/56
+app.use(session({
+    secret: cookie_secret,
+    name: cookie_name,
+    store: sessionStore, // connect-mongo session store
+    proxy: true,
+    resave: true,
+    saveUninitialized: true
+}));
+*/
 app.set('view engine', 'ejs');
 
 var passport = require('passport'),
@@ -76,6 +92,11 @@ app.get('/detail', (req, res) => {
 	res.render("detail.ejs");
 });
 
+app.get('/searchresult', (req, res) => {
+	
+	res.render("searchresult.ejs");
+});
+
 app.get('/tryratingdetail', (req, res) => {
 	
 	res.render("tryratingdetail.ejs");
@@ -88,7 +109,7 @@ app.get('/tryratingdetail', (req, res) => {
 /* render movie detail page */
 app.get('/realdetail/:movieId', db.trydetail);
 
-app.post('/inputcomment', db.inputcomment);
+app.post('/inputcomment/:movie_id', db.inputcomment);
 
 /* fake movie detail post page */
 app.post('/kimietrydetail', (req, res)=>{

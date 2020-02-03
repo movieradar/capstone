@@ -109,7 +109,7 @@ function tryHomePage(req, res){
 function trydetail(req, res){
 	
 	var movieId = req.params.movieId;
-	var rows = 0;
+	var commentNow = ['Deadpool is a hilariously entertaining film that works mainly because of Reynolds himself. His comedic skills pay off gloriously as the titular character, who gives so many quips in one instance that some jokes will be missed.'];
 	
 	pool.query('select m.movie_id, r.recommended_movie_id, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from recommendations_movie r, (select movie_id, original_title, overview, director, spoken_languages, casting, runtime, genres from movies where movie_id = 5) as m where r.movie_id = m.movie_id;', (error, results) => {
 		if (error) {
@@ -121,11 +121,20 @@ function trydetail(req, res){
 			var title = results.rows[0].original_title;
 			//console.log(results.rows[0].recommended_movie_id)
 			//console.log(title);
-			this.rows = results.rows;
-			res.render("realdetail.ejs", {movieId: movieId, rows:rows});
+			//req.session.kimiewant = results.rows; //not working. cannot store sth into req
+			rows = results.rows;
+			//this.rows = results.rows;
+			//console.log(req.session.kimiewant);
+			commentNow = ['Deadpool is a hilariously entertaining film that works mainly because of Reynolds himself. His comedic skills pay off gloriously as the titular character, who gives so many quips in one instance that some jokes will be missed.'];
+			res.render("realdetail.ejs", {movieId: movieId, rows:rows, commentNow:commentNow});
+			
 		}
   	});	
-	console.log(rows);
+	//console.log(rows);
+	//var rows = req.session.kimiewant;
+	//console.log(req);
+	console.log("this is from down function!!!!!!");
+	//res.render("realdetail.ejs", {movieId: movieId, rows:rows});
 	
 }
 
@@ -162,7 +171,47 @@ const getMovieDetail = (request, response) => {
 };
 
 
-function inputcomment(req,res){
+
+const inputcomment = (request, response) => {
+	var movie_id = request.params.movie_id;
+	//var rows = request.body.rows;
+	//var commentNow = request.body.commentNow;
+	console.log(request.body);
+	var comment = request.body.newcomment;
+	//console.log(commentNow);
+	
+	var commentNow = ['Deadpool is a hilariously entertaining film that works mainly because of Reynolds himself. His comedic skills pay off gloriously as the titular character, who gives so many quips in one instance that some jokes will be missed.'];
+	//commentNow[commentNow.length] = comment;
+	commentNow[1] = comment;
+	
+	pool.query('select m.movie_id, r.recommended_movie_id, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from recommendations_movie r, (select movie_id, original_title, overview, director, spoken_languages, casting, runtime, genres from movies where movie_id = 5) as m where r.movie_id = m.movie_id;', (error, results) => {
+		if (error) {
+			console.log(error);
+			throw error;
+		} else {
+			//console.log(results.rows);
+			//rows = results.rows;
+			var title = results.rows[0].original_title;
+			//console.log(results.rows[0].recommended_movie_id)
+			//console.log(title);
+			//req.session.kimiewant = results.rows; //not working. cannot store sth into req
+			var rows = results.rows;
+			//this.rows = results.rows;
+			//console.log(req.session.kimiewant);
+			
+			
+			response.render("realdetail.ejs", {movieId: movie_id, rows:rows, commentNow:commentNow});
+			
+		}
+  	});	
+	
+	
+	
+	//response.render("realdetail.ejs", {movieId: movie_id, rows: rows, commentNow:commentNow});
+};
+
+
+function getRecommendMovies(movie_id){
 	
 }
 
@@ -228,7 +277,8 @@ module.exports = {
 	tryHomePage,
 	realHomePage,
 	logout,
-	inputcomment
+	inputcomment,
+	getRecommendMovies
 }
 
 //pool.end().then(() => console.log('pool has ended'))
