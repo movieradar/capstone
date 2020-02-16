@@ -29,13 +29,20 @@
             </div>
             <div id="content">
                 <h2 class="title"><%= rows[0].original_title %></h2>
-                <div class="ratings">
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
+                <h2>
+				 ---------------------------------------------
+				</h2>
+				<div class="ratings">
                     <i class="fa fa-star inactive"></i>
+                    <i class="fa fa-star inactive"></i>
+                    <i class="fa fa-star inactive"></i>
+                    <i class="fa fa-star inactive"></i>
+                    <i class="fa fa-star inactive"></i>
+					     Rating: not defined yet 
                 </div>
+				<h2>
+				 ---------------------------------------------
+				</h2>
                 <!--how to set up rating https://stackoverflow.com/questions/3253436/how-can-i-change-the-color-of-the-stars-on-mouse-hover-in-this-js-->
                 <p class="description"><%= rows[0].overview %></p>
                 <p class="director">Director: <%= rows[0].director %></p>
@@ -76,9 +83,9 @@
                      <img src="https://s3.amazonaws.com/uifaces/faces/twitter/BillSKenney/73.jpg">
                  </div><!-- the input field --><div class="input_comment">
 <!-- Kimienoteeeeee: create comment 的form在此！！ -->
-				 <form action = "/inputcomment/<%=rows[0].movie_id %>" method = "POST">
+				 <form action = "/inputcomment/<%=movieId %>" method = "POST">
                      <input id = "newcomment" name = "newcomment" type="text" placeholder="Join the conversation..">
-					<input type="hidden" id="rows" name = "rows" value = "<%= rows %>">
+					<input type="hidden" id="rows" value= "<%= rows %>" name="rows">
 					 <input type="hidden" id="commentNow" name = "commentNow" value = "<%= commentNow %>" >
 					 <input type = 'submit' class="button" VALUE = "SUBMIT">
 				 </form>
@@ -121,7 +128,7 @@
                              <ul>
                                  <li><i class="fa fa-share-alt"></i></li>
                                  <li><i class="fa fa-reply"></i></li>
-                                 <li><i class="fa fa-heart love"></i><span class="love_amt"> 4039</span></i></li></li>
+                                 <li><i class="fa fa-heart love"></i><span class="love_amt"> 4039</span></li>
                              </ul>
                          </div>
     

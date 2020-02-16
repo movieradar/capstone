@@ -9,6 +9,20 @@ const pool = new Pool({
 
 console.log("connected!");
 
+/*
+(async () => {
+  console.log('starting async query');
+  const result = await pool.query('SELECT NOW()');
+  console.log('async query finished');
+  console.log('starting callback query');
+  pool.query('SELECT NOW()', (err, res) => {
+    console.log('callback query finished')
+  });
+  console.log('calling end');
+  await pool.end();
+  console.log('pool has drained');
+})()
+*/
 
 const createUser = (request, response) => {
 	var userName = request.body.userName;
@@ -61,7 +75,7 @@ const logout = (request, response) => {
 function realHomePage(req, res){
 	
 	
-		pool.query("select movie_id, genres_name, movie_title, poster_url from homepage order by genres_name;", (error, results) => {
+		pool.query("select m.movie_id, h.genre, h.movie_title, m.poster_path from homepages h, movies m where h.movie_id = m.movie_id and genre in ('Comedy', 'Drama', 'Action') order by h.genre, h.year desc, h.wr desc;", (error, results) => {
 		
 			if (error) {
 				console.log(error);
@@ -69,11 +83,12 @@ function realHomePage(req, res){
 			} else {
 				console.log(results.rows);
 				var rows = results.rows;
-				var movie_id = results.rows[0].movie_id;
-				var poster_url = results.rows[0].poster_url;
-				console.log(poster_url);
+				
+				//var movie_id = results.rows[0].movie_id;
+				//var poster_url = results.rows[0].poster_url;
+				//console.log(poster_url);
 				req.session.flashVisitor = "You are now viewing as visitor, log in to see more";
-				res.render("home.ejs",{movie_id: movie_id, poster_url: poster_url, rows: rows, sess: req.session});
+				res.render("home.ejs",{rows: rows, sess: req.session});
 			}
   		});
 		
@@ -107,11 +122,11 @@ function tryHomePage(req, res){
 
 
 function trydetail(req, res){
-	
+	//console.log(req.session);
 	var movieId = req.params.movieId;
 	var commentNow = ['Deadpool is a hilariously entertaining film that works mainly because of Reynolds himself. His comedic skills pay off gloriously as the titular character, who gives so many quips in one instance that some jokes will be missed.'];
 	
-	pool.query('select m.movie_id, r.recommended_movie_id, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from recommendations_movie r, (select movie_id, original_title, overview, director, spoken_languages, casting, runtime, genres from movies where movie_id = 5) as m where r.movie_id = m.movie_id;', (error, results) => {
+	pool.query('select m.movie_id, r.recommended_movie_id, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from recommendations_movie r, (select movie_id, original_title, overview, director, spoken_languages, casting, runtime, genres from movies where movie_id = $1) as m where r.movie_id = m.movie_id;', [movieId],(error, results) => {
 		if (error) {
 			console.log(error);
 			throw error;
@@ -122,10 +137,10 @@ function trydetail(req, res){
 			//console.log(results.rows[0].recommended_movie_id)
 			//console.log(title);
 			//req.session.kimiewant = results.rows; //not working. cannot store sth into req
-			rows = results.rows;
+			var rows = results.rows;
 			//this.rows = results.rows;
 			//console.log(req.session.kimiewant);
-			commentNow = ['Deadpool is a hilariously entertaining film that works mainly because of Reynolds himself. His comedic skills pay off gloriously as the titular character, who gives so many quips in one instance that some jokes will be missed.'];
+			//commentNow = ['Deadpool is a hilariously entertaining film that works mainly because of Reynolds himself. His comedic skills pay off gloriously as the titular character, who gives so many quips in one instance that some jokes will be missed.'];
 			res.render("realdetail.ejs", {movieId: movieId, rows:rows, commentNow:commentNow});
 			
 		}
@@ -134,33 +149,13 @@ function trydetail(req, res){
 	//var rows = req.session.kimiewant;
 	//console.log(req);
 	console.log("this is from down function!!!!!!");
-	//res.render("realdetail.ejs", {movieId: movieId, rows:rows});
-	
+	//res.render("realdetail.ejs", {movieId: movieId, rows:rows});	
 }
 
 
-
-/* test if trydetail funciton can call this func. now is useless
-function renderDetail(req, res, rows){
-	pool.query('SELECT * FROM recommendations_movie WHERE movie_id = 2'), (error, results)=>{
-				if (error) {
-					console.log(error);
-					throw error;
-				} else {
-					console.log("YEs 202020202020!!!");
-					//console.log(results.rows);
-					var rows2 = results.rows;
-					//var title = results.rows[0].movie_title;
-					//console.log(title);
-					res.render("realdetail.ejs", {movieId: movieId, rows: rows, rows2:rows2});
-				}
-		
-			}
-}
-*/
 
 const getMovieDetail = (request, response) => {
-  const id = parseInt(request.params.id)
+  const id = parseInt(request.params.id);
 
   pool.query('SELECT * FROM movie WHERE id = $1', [id], (error, results) => {
     if (error) {
@@ -173,16 +168,18 @@ const getMovieDetail = (request, response) => {
 
 
 const inputcomment = (request, response) => {
-	var movie_id = request.params.movie_id;
-	//var rows = request.body.rows;
-	//var commentNow = request.body.commentNow;
+	var movieId = request.params.movieId;
+	var rows = request.body.rows;
+	var commentNow = [request.body.commentNow];
+	console.log(commentNow);
 	console.log(request.body);
 	var comment = request.body.newcomment;
 	//console.log(commentNow);
 	
-	var commentNow = ['Deadpool is a hilariously entertaining film that works mainly because of Reynolds himself. His comedic skills pay off gloriously as the titular character, who gives so many quips in one instance that some jokes will be missed.'];
+	//var commentNow = ['Deadpool is a hilariously entertaining film that works mainly because of Reynolds himself. His comedic skills pay off gloriously as the titular character, who gives so many quips in one instance that some jokes will be missed.'];
 	//commentNow[commentNow.length] = comment;
-	commentNow[1] = comment;
+	commentNow[commentNow.length] = comment;
+	
 	
 	pool.query('select m.movie_id, r.recommended_movie_id, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from recommendations_movie r, (select movie_id, original_title, overview, director, spoken_languages, casting, runtime, genres from movies where movie_id = 5) as m where r.movie_id = m.movie_id;', (error, results) => {
 		if (error) {
@@ -200,20 +197,77 @@ const inputcomment = (request, response) => {
 			//console.log(req.session.kimiewant);
 			
 			
-			response.render("realdetail.ejs", {movieId: movie_id, rows:rows, commentNow:commentNow});
+			response.render("realdetail.ejs", {movieId: movieId, rows: rows, commentNow:commentNow});
 			
 		}
   	});	
 	
 	
 	
-	//response.render("realdetail.ejs", {movieId: movie_id, rows: rows, commentNow:commentNow});
+	//response.render("realdetail.ejs", {movieId: movieId, rows: rows, commentNow:commentNow});
 };
 
 
-function getRecommendMovies(movie_id){
+const getRecommendMovies = (request, response) => {
+
+	var movieId = 5;
+	var result = [];
+	pool.query('select m.movie_id, r.recommended_movie_id, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from recommendations_movie r, (select movie_id, original_title, overview, director, spoken_languages, casting, runtime, genres from movies where movie_id = 5) as m where r.movie_id = m.movie_id;', (error, results) => {
+		if (error) {
+			console.log(error);
+			throw error;
+		} else {
+			//console.log(results.rows);
+			//rows = results.rows;
+			var title = results.rows[0].original_title;
+			//console.log(results.rows[0].recommended_movie_id)
+			//console.log(title);
+			//req.session.kimiewant = results.rows; //not working. cannot store sth into req
+			result.push(results.rows);
+			//this.rows = results.rows;
+			//console.log(req.session.kimiewant);
+			pool.query('SELECT NOW()', (error, results) => {
+				if (error) {
+					console.log(error);
+					throw error;
+			 	} else {
+			 		result.push(results.rows);
+			 		console.log(result);
+			 		response.render("doubleQuery.ejs", {movieId: movieId, rows:result});
+			 	}
+				
+			});
+		}
+
+			
+	});
 	
 }
+
+const searchMovieByKey = (req, res)=>{
+	var movieId = request.params.movieId;
+	var searchkey = request.body.searchkey;
+	
+	
+	pool.query("select movie_id, title, overview, tagline, genres, casting, director from movies where document_with_weight @@ to_tsquery($1) order by ts_rank(document_with_weight, o_tsquery($1)) desc;",[searchkey], (error, results) => {
+		if (error) {
+			console.log(error);
+			throw error;
+		} else {
+			
+			var rows = results.rows;
+			console.log(rows);
+			
+			response.render("realsearchresult.ejs", {movieId: movieId, rows: rows, sess:req.session});
+			
+		}
+  	});	
+
+}
+
+
+
+
 
 /* https://node-postgres.com/api/result, can solve the problem stated above in const signin, but cannot catch error 
 const { Pool } = require('pg')
@@ -278,7 +332,8 @@ module.exports = {
 	realHomePage,
 	logout,
 	inputcomment,
-	getRecommendMovies
+	getRecommendMovies,
+	searchMovieByKey
 }
 
 //pool.end().then(() => console.log('pool has ended'))

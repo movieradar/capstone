@@ -97,6 +97,8 @@ app.get('/searchresult', (req, res) => {
 	res.render("searchresult.ejs");
 });
 
+app.post('/searchresult/:searchkey', db.searchMovieByKey);
+
 app.get('/tryratingdetail', (req, res) => {
 	
 	res.render("tryratingdetail.ejs");
@@ -109,7 +111,7 @@ app.get('/tryratingdetail', (req, res) => {
 /* render movie detail page */
 app.get('/realdetail/:movieId', db.trydetail);
 
-app.post('/inputcomment/:movie_id', db.inputcomment);
+app.post('/inputcomment/:movieId', db.inputcomment);
 
 /* fake movie detail post page */
 app.post('/kimietrydetail', (req, res)=>{
@@ -132,8 +134,11 @@ app.get('/forkimietrythings/:thing', (req, res) => {
 app.get('/posts', db.tryHomePage);
 
 app.get('/secret', (req, res) => {
-	res.render('secret');
+	res.render('secret.ejs');
 });
+
+
+//app.get('/tryDouble', db.tryDoubleQuery);
 
 
 

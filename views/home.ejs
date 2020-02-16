@@ -34,7 +34,8 @@
 
 	<section id="searchbar">
         <form>
-                <input type="search" placeholder="  Find your favorite movie">
+            <input type="search" placeholder="  Find your favorite movie">
+			<button class="button">Search</button>
         </form>
     </section>
     <section id="category" class="clearfix">
@@ -48,7 +49,7 @@
             <div class="row">
 				<% for(var i = 0; i < 7; i++){ %>
 						<div class="post">
-							<a href="/realdetail/<%=rows[i].movie_id %>"><img src="<%=rows[i].poster_url%>" alt="Posters"></a>
+							<a href="/realdetail/<%=rows[i].movie_id %>"><img src="<%=rows[i].poster_path%>" alt="Posters"></a>
                 		</div>
 					<% } %>
             </div>
@@ -65,7 +66,7 @@
             <div class="row">
                 <% for(var i = 7; i < 14; i++){ %>
 						<div class="post">
-							<a href="/realdetail/<%=rows[i].movie_id %>"><img src="<%=rows[i].poster_url%>" alt="Posters"></a>
+							<a href="/realdetail/<%=rows[i].movie_id %>"><img src="<%=rows[i].poster_path%>" alt="Posters"></a>
                 		</div>
 					<% } %>
             </div>
@@ -82,7 +83,7 @@
                 <div class="row">
                     <% for(var i = 14; i < 21; i++){ %>
 						<div class="post">
-							<a href="/realdetail/<%=rows[i].movie_id %>"><img src="<%=rows[i].poster_url%>" alt="Posters"></a>
+							<a href="/realdetail/<%=rows[i].movie_id %>"><img src="<%=rows[i].poster_path%>" alt="Posters"></a>
                 		</div>
 					<% } %>
                 </div>
