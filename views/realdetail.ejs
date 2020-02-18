@@ -38,7 +38,10 @@
                     <i class="fa fa-star inactive"></i>
                     <i class="fa fa-star inactive"></i>
                     <i class="fa fa-star inactive"></i>
-					     Rating: not defined yet 
+					    
+                </div>
+                <div class="ratings">
+                 Average IMDB Rate: <%=rows[0].vote_average / 2 %>
                 </div>
 				<h2>
 				 ------------------------------------------
@@ -62,11 +65,11 @@
 
 	
         <div class="row">
-	<% for(var i = 0; i < 6; i++){ %>
+	<% for(var i = 0; i < recommmendmovies.length; i++){ %>
             <div class="post">
-				<a href="/realdetail/<%= rows[i].recommended_movie_id %>"><img src="<%= rows[i].poster_path %>" alt="Deadpool Posters"></a>
-                <h3 class="title">Recommend:<%= rows[i].recommended_movie_id %></h3>
-                <p class="post_info">Genre temp| 109 Minutes</p>
+				<a href="/realdetail/<%= recommmendmovies[i].recommended_movie_id %>"><img src="<%= recommmendmovies[i].poster_path %>" alt="Movie Poster"></a>
+                <h3 class="title"><%= recommmendmovies[i].title %></h3>
+                <p class="post_info"><%= recommmendmovies[i].genres %>| <%= recommmendmovies[i].runtime %> Minutes</p>
             </div>
     <% } %>
           
@@ -86,6 +89,7 @@
 				 <form action = "/inputcomment/<%=movieId %>" method = "POST">
                      <input id = "newcomment" name = "newcomment" type="text" placeholder="Join the conversation..">
 					<input type="hidden" id="rows" value= "<%= rows %>" name="rows">
+					 <input type="hidden" id="rows" value= "<%= recommmendmovies %>" name="recommmendmovies">
 					 <input type="hidden" id="commentNow" name = "commentNow" value = "<%= commentNow %>" >
 					 <input type = 'submit' class="button" VALUE = "SUBMIT">
 				 </form>
@@ -108,9 +112,9 @@
     
                      <!-- current #{user} avatar -->
                      <div class="user_avatar">
-                         <img src="https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/73.jpg">
+                         <img src="https://s3.amazonaws.com/uifaces/faces/twitter/BillSKenney/73.jpg">
                      </div><!-- the comment body --><div class="comment_body">
-                         <p><%= commentNow[i]%> </p>
+                         <p><%= commentNow[i].comment%> </p>
                      </div>
     
                      <!-- comments toolbar -->
@@ -121,7 +125,7 @@
                              <ul>
                                  <li><i class="fa fa-clock-o"></i> 13:94</li>
                                  <li><i class="fa fa-calendar"></i> 04/01/2015</li>
-                                 <li><i class="fa fa-pencil"></i> <span class="user">Sarah Walkman</span></li>
+                                 <li><i class="fa fa-pencil"></i> <span class="user">User ID: <%= commentNow[i].user_id%></span></li>
                              </ul>
                          </div><!-- inc. share/reply and love --><div class="comment_tools">
                              
