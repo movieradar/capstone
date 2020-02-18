@@ -81,7 +81,7 @@ function realHomePage(req, res){
 				console.log(error);
 				throw error;
 			} else {
-				console.log(results.rows);
+				//console.log(results.rows);
 				var rows = results.rows;
 				
 				//var movie_id = results.rows[0].movie_id;
@@ -114,6 +114,7 @@ function tryHomePage(req, res){
 			var movie_id = results.rows[0].movie_id;
 			var poster_url = results.rows[0].poster_url;
 			console.log(movie_id);
+			req.session.movie_id = movie_id;
 			res.render("trypost.ejs",{posts:post, movie_id: movie_id, poster_url: poster_url});
 		}
   });
@@ -124,14 +125,15 @@ function tryHomePage(req, res){
 function trydetail(req, res){
 	//console.log(req.session);
 	var movieId = req.params.movieId;
+	req.session.movie_id = movieId;
 	var commentNow = ['Deadpool is a hilariously entertaining film that works mainly because of Reynolds himself. His comedic skills pay off gloriously as the titular character, who gives so many quips in one instance that some jokes will be missed.'];
 	
-	pool.query('select m.movie_id, r.recommended_movie_id, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from recommendations_movie r, (select movie_id, original_title, overview, director, spoken_languages, casting, runtime, genres from movies where movie_id = $1) as m where r.movie_id = m.movie_id;', [movieId],(error, results) => {
+	pool.query('select m.movie_id, r.recommended_movie_id, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from recommendations_movie r, (select movie_id, original_title, poster_path, overview, director, spoken_languages, casting, runtime, genres from movies where movie_id = $1) as m where r.movie_id = m.movie_id;', [movieId],(error, results) => {
 		if (error) {
 			console.log(error);
 			throw error;
 		} else {
-			//console.log(results.rows);
+			console.log(results.rows);
 			//rows = results.rows;
 			var title = results.rows[0].original_title;
 			//console.log(results.rows[0].recommended_movie_id)
@@ -153,7 +155,7 @@ function trydetail(req, res){
 }
 
 
-
+/*
 const getMovieDetail = (request, response) => {
   const id = parseInt(request.params.id);
 
@@ -164,7 +166,7 @@ const getMovieDetail = (request, response) => {
     response.status(200).json(results.rows)
   })
 };
-
+*/
 
 
 const inputcomment = (request, response) => {
@@ -212,7 +214,7 @@ const getRecommendMovies = (request, response) => {
 
 	var movieId = 5;
 	var result = [];
-	pool.query('select m.movie_id, r.recommended_movie_id, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from recommendations_movie r, (select movie_id, original_title, overview, director, spoken_languages, casting, runtime, genres from movies where movie_id = 5) as m where r.movie_id = m.movie_id;', (error, results) => {
+	pool.query('select m.movie_id, r.recommended_movie_id, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from recommendations_movie r, (select movie_id, original_title, overview, director, spoken_languages, casting, runtime, genres from movies where movie_id = movieId) as m where r.movie_id = m.movie_id;', (error, results) => {
 		if (error) {
 			console.log(error);
 			throw error;
@@ -233,7 +235,7 @@ const getRecommendMovies = (request, response) => {
 			 	} else {
 			 		result.push(results.rows);
 			 		console.log(result);
-			 		response.render("doubleQuery.ejs", {movieId: movieId, rows:result});
+			 		response.render("*****.ejs", {movieId: movieId, rows:result});
 			 	}
 				
 			});
@@ -245,11 +247,12 @@ const getRecommendMovies = (request, response) => {
 }
 
 const searchMovieByKey = (req, res)=>{
-	var movieId = request.params.movieId;
-	var searchkey = request.body.searchkey;
+	var movieId = req.params.movieId;
+	//var searchkey = request.body.searchkey;
+	var searchkey = req.body.searchkey;
+	console.log(searchkey);
 	
-	
-	pool.query("select movie_id, title, overview, tagline, genres, casting, director from movies where document_with_weight @@ to_tsquery($1) order by ts_rank(document_with_weight, o_tsquery($1)) desc;",[searchkey], (error, results) => {
+	pool.query("select movie_id, title, overview, poster_path, tagline, genres, year, casting, director from movies where document_with_weight @@ to_tsquery($1) order by ts_rank(document_with_weight, to_tsquery($1)) desc;",[searchkey], (error, results) => {
 		if (error) {
 			console.log(error);
 			throw error;
@@ -258,7 +261,7 @@ const searchMovieByKey = (req, res)=>{
 			var rows = results.rows;
 			console.log(rows);
 			
-			response.render("realsearchresult.ejs", {movieId: movieId, rows: rows, sess:req.session});
+			res.render("realsearchresult.ejs", {movieId: movieId, rows: rows, sess:req.session});
 			
 		}
   	});	
@@ -267,65 +270,8 @@ const searchMovieByKey = (req, res)=>{
 
 
 
-
-
-/* https://node-postgres.com/api/result, can solve the problem stated above in const signin, but cannot catch error 
-const { Pool } = require('pg')
-const pool = new Pool()
-const client = await pool.connect()
-const result = await client.query({
-  rowMode: 'array',
-  text: 'SELECT 1 as one, 2 as two;',
-})
-console.log(result.fields[0].name) // one
-console.log(result.fields[1].name) // two
-console.log(result.rows) // [1, 2]
-await client.end()
-*/
-	
-/* follow is a varian for query*/
-// 	const query = {
-// 	  text: 'SELECT count(*) From public.user where user_email = $1 and user_password = $2',
-// 	  values: [email, password],
-// 	}
-// 	// callback
-// 	client.query(query, (err, response) => {
-// 	  if (err) {
-// 		console.log(err.stack);
-// 	  } else {
-// 		console.log(response.rows[0]);
-// 		 response.redirect('/');
-// 	  }
-// 	})
-// 	// promise
-// 	client
-// 	  .query(query)
-// 	  .then(response => console.log(res.rows[0]))
-// 	  .catch(e => console.error(e.stack))
-// };
-
-
-/* can be deleted after all is done
-const createUser = (request, response) => {
-	const userName = request.body.userName;
-	const email = request.body.email;
-	const password = request.body.password;
-	console.log('got to post page');
-  //const { userName, email, password } = request.body
-  pool.query('INSERT INTO public.user (user_name, user_email, user_password) VALUES ($1, $2, $3)', [userName, email, password], (error, results) => {
-    if (error) {
-      console.log(error);
-      return console.error('Error executing query', error.stack);
-    }
-    //response.status(201).send(`User added with ID: ${result.insertId}`)
-    return console.log('successful!');
-  });
-};
-*/
-
 module.exports = {
   createUser,
-  getMovieDetail,
   signin,
 	trydetail,
 	tryHomePage,

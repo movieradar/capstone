@@ -14,7 +14,7 @@
         <div class="wrapper">
             <img src="../../logoblack.png" alt="" class="logo" width="246" height="40">
             <nav id="main_nav">
-                <a href="#">Home</a>
+                <a href="/homepage">Home</a>
                 <a href="#">Category</a>
                 <a href="#">Sign in/out</a>
             </nav>
@@ -30,7 +30,7 @@
             <div id="content">
                 <h2 class="title"><%= rows[0].original_title %></h2>
                 <h2>
-				 ---------------------------------------------
+				 ------------------------------------------
 				</h2>
 				<div class="ratings">
                     <i class="fa fa-star inactive"></i>
@@ -41,7 +41,7 @@
 					     Rating: not defined yet 
                 </div>
 				<h2>
-				 ---------------------------------------------
+				 ------------------------------------------
 				</h2>
                 <!--how to set up rating https://stackoverflow.com/questions/3253436/how-can-i-change-the-color-of-the-stars-on-mouse-hover-in-this-js-->
                 <p class="description"><%= rows[0].overview %></p>
@@ -64,7 +64,7 @@
         <div class="row">
 	<% for(var i = 0; i < 6; i++){ %>
             <div class="post">
-				<a href="/realdetail/<%= rows[i].recommended_movie_id %>"><img src="../../deadpool.jpg" alt="Deadpool Posters"></a>
+				<a href="/realdetail/<%= rows[i].recommended_movie_id %>"><img src="<%= rows[i].poster_path %>" alt="Deadpool Posters"></a>
                 <h3 class="title">Recommend:<%= rows[i].recommended_movie_id %></h3>
                 <p class="post_info">Genre temp| 109 Minutes</p>
             </div>

@@ -97,7 +97,7 @@ app.get('/searchresult', (req, res) => {
 	res.render("searchresult.ejs");
 });
 
-app.post('/searchresult/:searchkey', db.searchMovieByKey);
+app.post('/searchresult', db.searchMovieByKey);
 
 app.get('/tryratingdetail', (req, res) => {
 	
