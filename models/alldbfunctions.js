@@ -29,7 +29,7 @@ const createUser = (request, response) => {
 	var email = request.body.email;
 	var password = request.body.password;
 	//console.log(userName);
-   pool.query('INSERT INTO public.user (user_name, user_email, user_password) VALUES ($1, $2, $3)', [userName, email, password], (error, results) => {
+   pool.query('INSERT INTO public.users (user_name, user_email, user_password) VALUES ($1, $2, $3)', [userName, email, password], (error, results) => {
 		if (error) {
 		  console.log(error);
 		  throw error;
@@ -47,7 +47,7 @@ const signin = (request, response) => {
 	var email = request.body.email;
 	var password = request.body.password;
 		
-	pool.query('SELECT count(*) From public.user where user_email = $1 and user_password = $2', [email, password], (error, results) => {
+	pool.query('SELECT count(*) From public.users where user_email = $1 and user_password = $2', [email, password], (error, results) => {
 		if (error) {
 		  console.log(error);
 		  throw error;
@@ -202,17 +202,21 @@ const getMovieDetail = (request, response) => {
 const inputcomment = (request, response) => {
 	var movieId = request.params.movieId;
 	
-	var user_id = 9;
-	if(request.session.user_id != 'undefined'){
-		user_id = request.session.user_id;
+	var userid = 1;
+	
+	if (typeof request.session.user_id != "undefined") {
+		userid = parseInt(request.session.user_id);
+	} else {
+		userid = 1;
 	}
+	
 	//console.log(request.body);
 	console.log(request.session);
 	var newcomment = request.body.newcomment;
 	//console.log(commentNow);
 	
 	
-	pool.query("INSERT INTO public.comments (movie_id, user_id, comment) VALUES ($1, 1, $2);",[movieId, newcomment], (error, results) => {
+	pool.query("INSERT INTO public.comments (movie_id, user_id, comment) VALUES ($1, $2, $3);",[movieId, userid, newcomment], (error, results) => {
 		if (error) {
 			console.log(error);
 			throw error;
@@ -267,8 +271,11 @@ const getRecommendMovies = (request, response) => {
 const searchMovieByKey = (req, res)=>{
 	var movieId = req.params.movieId;
 	//var searchkey = request.body.searchkey;
-	var searchkey = req.body.searchkey;
-	console.log(searchkey);
+	var searchkeyString = req.body.searchkey;
+	console.log(searchkeyString);
+	var searchkeyArray = searchkeyString.split(' ');
+	var searchkey = searchkeyArray.join('&');
+	console.log("searchkey after Modification" + searchkey);
 	
 	pool.query("select movie_id, title, runtime, vote_average, overview, poster_path, tagline, genres, year, casting, director from movies where document_with_weight @@ to_tsquery($1) order by ts_rank(document_with_weight, to_tsquery($1)) desc;",[searchkey], (error, results) => {
 		if (error) {
@@ -277,7 +284,7 @@ const searchMovieByKey = (req, res)=>{
 		} else {
 			
 			var rows = results.rows;
-			console.log(rows);
+			//console.log(rows);
 			
 			res.render("realsearchresult.ejs", {movieId: movieId, rows: rows, sess:req.session});
 			
