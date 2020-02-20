@@ -101,7 +101,7 @@ app.post('/searchresult', db.searchMovieByKey);
 
 app.get('/tryratingdetail', (req, res) => {
 	
-	res.render("tryratingdetail.ejs");
+	res.render("tryratingdetail.ejs", {db:db});
 });
 
 
@@ -125,6 +125,8 @@ app.post('/kimietrydetail', (req, res)=>{
 app.post('/signin', db.signin);
 //app.post('/detail', db.getMovieDetail);
 
+app.post('/inputrating', db.inputrating);
+
 app.get('/forkimietrythings/:thing', (req, res) => {
 	var thing = req.params.thing;
 	
@@ -134,7 +136,7 @@ app.get('/forkimietrythings/:thing', (req, res) => {
 app.get('/posts', db.tryHomePage);
 
 app.get('/secret', (req, res) => {
-	res.render('secret.ejs');
+	res.render('secret.ejs', {db:db});
 });
 
 

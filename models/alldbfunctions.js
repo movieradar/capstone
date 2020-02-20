@@ -61,7 +61,7 @@ const signin = (request, response) => {
 			console.log("yay");
 			console.log(results);
 			request.session.login = true;
-			request.session.user_id = rows[0].user_id;
+			request.session.user_id = results.rows[0].user_id;
 			response.redirect('/homepage');
 		}
     });
@@ -293,6 +293,39 @@ const searchMovieByKey = (req, res)=>{
 
 }
 
+const inputrating = (request, response) => {
+	var ratingval = request.body.ratingval;
+	var movieId = request.body.movieId;
+	console.log("ratingval=" + ratingval);
+	console.log("rating movie id=" + movieId);
+	var user_id = 1;
+	
+	if (typeof request.session.user_id != "undefined") {
+		user_id = parseInt(request.session.user_id);
+	} else {
+		user_id = 1;
+	}
+	//console.log(userName);
+   pool.query('INSERT INTO public.ratings (movie_id, user_id, rating) VALUES ($1, $2, $3)', [movieId, user_id, ratingval], (error, results) => {
+		if (error) {
+		  console.log(error);
+		  throw error;
+		} else {
+			console.log("yay, you input a rating!");
+			var newaddress = "/realdetail/" + movieId;
+			response.redirect(newaddress);
+		}
+    //response.status(201).send(`User added with ID: ${result.insertId}`)
+	});
+};
+
+const tryPassFunction = (request, response) => {
+	
+   
+	console.log("yay! Kimie!");
+}
+
+
 
 
 module.exports = {
@@ -304,7 +337,9 @@ module.exports = {
 	logout,
 	inputcomment,
 	getRecommendMovies,
-	searchMovieByKey
+	searchMovieByKey,
+	tryPassFunction,
+	inputrating
 }
 
 //pool.end().then(() => console.log('pool has ended'))

@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/narmalize/3.0.3/normalize.min.css">
     <script src="https://use.fontawesome.com/f3626566ff.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../models/alldbfunctions.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/stylesheets/styles.css">
 	<script>
@@ -48,6 +49,7 @@
 					//$(str).animate({'opacity':0},'slow');
 				}
 				alert("Your rating for this movie is " + targetno);
+				document.getElementById("rating_form").submit();
 				//alert(stars[1]+" "+stars[2]+" "+stars[3]+" "+stars[4]+" "+stars[5]);
 			}
 			else if(stars[targetno] == 'on')    {
@@ -66,8 +68,11 @@
 					$(str).css("color","black");
 					//$(str).animate({'opacity':0},'slow');
 				}
+
 				alert("Your rating for this movie is else if" + targetno);
+				document.getElementById("rating_form").submit();
 			}
+
     	}
 	
 	</script>
@@ -91,13 +96,18 @@
             <div id="content">
                 <h2 class="title">Deadpool (2016)</h2>
                 <div class="ratings">
-                  	<span id = "star1"><i class="fa fa-star"></i></span>	
-					<span id = "star2"><i class="fa fa-star"></i></span>
-                    <span id = "star3"><i class="fa fa-star"></i></span>
-					<span id = "star4"><i class="fa fa-star"></i></span>
-					<span id = "star5"><i class="fa fa-star"></i></span>
+                 	<form name = "rating_form" id = "rating_form" action = '/inputrating' method = 'POST'>
+	                	
+	                  	<span id = "star1"><i class="fa fa-star"></i></span>	
+						<span id = "star2"><i class="fa fa-star"></i></span>
+	                    <span id = "star3"><i class="fa fa-star"></i></span>
+						<span id = "star4"><i class="fa fa-star"></i></span>
+						<span id = "star5"><i class="fa fa-star"></i></span>
+						
                 </div>
 				<input type="hidden" name="ratingval" id="ratingval" value="0" />
+				<input type="hidden" name="movieId" id="movieId" value="5" />
+					</form>
                 <!--how to set up rating https://stackoverflow.com/questions/3253436/how-can-i-change-the-color-of-the-stars-on-mouse-hover-in-this-js-->
                 <p class="description">A wisecracking mercenary gets experimented on and becomes immortal but ugly, and sets out to track down the man who ruined his looks.</p>
                 <p class="director">Director: Tim Miller</p>

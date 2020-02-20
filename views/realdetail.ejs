@@ -1,15 +1,87 @@
 <!DOCTYPE html>
 <html>
 <header>
-    <title>Fake Kimie Detail</title>
+    <title>Real Movie Detail -- Kimie</title>
     <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/narmalize/3.0.3/normalize.min.css">
     <script src="https://use.fontawesome.com/f3626566ff.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/stylesheets/styles.css">
+    <script>
+        $(document).ready(function(){
+            stars = ['off','off','off','off','off','off'];  
+            clearRating();
+
+            $('#star1').click(function(){ rateTheStar(1);});
+            $('#star2').click(function(){ rateTheStar(2);});
+            $('#star3').click(function(){ rateTheStar(3);});
+            $('#star4').click(function(){ rateTheStar(4);});
+            $('#star5').click(function(){ rateTheStar(5);});
+        });
+        
+        function clearRating()  {
+            count = 1;
+            for(count = 1; count <= 5; count++) {
+                strTarget = '#star'+count+' i';
+                $(strTarget).css("color","black");
+            }
+        }
+        
+        function rateTheStar(targetno)  {
+            console.log("yes we are here");
+            if(stars[targetno] == 'off')    {
+
+                target = '';
+                //i = 0;
+                //j = 0;
+
+                for(j = 1; j <= targetno; j++)  {
+                    target = '#star'+j+' i';
+                    stars[j] = 'on';
+                    $(target).css("color","orange");
+                }
+                document.getElementById('ratingval').value = targetno;
+                for(i = targetno+1; i <= 5; i++)    {
+                    stars[i] = 'off';
+                    str = '#star'+i+' i';
+                    $(str).css("color","black");
+                    //$(str).animate({'opacity':0},'slow');
+                }
+                alert("Your rating for this movie is " + targetno);
+                document.getElementById("rating_form").submit();
+                //alert(stars[1]+" "+stars[2]+" "+stars[3]+" "+stars[4]+" "+stars[5]);
+            }
+            else if(stars[targetno] == 'on')    {
+                document.getElementById('ratingval').value = targetno;
+                i = 0;
+                for(j = 1; j <= targetno; j++)  {
+                    target = '#star'+j+' i';
+                    stars[j] = 'on';
+                    //$(str).animate({'opacity':1},'slow');
+                    $(target).css("color","orange");
+                }
+                newTargetNo = targetno + 1;
+                for(i = targetno + 1; i <= 5; i++)   {
+                    str = '#star'+i+' i';
+                    stars[i] = 'off';
+                    $(str).css("color","black");
+                    //$(str).animate({'opacity':0},'slow');
+                }
+
+                alert("Your rating for this movie is now" + targetno);
+                document.getElementById("rating_form").submit();
+            }
+
+        }
+    
+    </script>
 </header>
+
 <body>
-	<h2>MovieID is now <%= rows[0].movie_id %> </h2>
-	<h2>Movie Title is now <%= rows[0].original_title %> </h2>
+
+    
+
    <header id ="top_header" class="clearfix">
         <div class="wrapper">
             <img src="../../logoblack.png" alt="" class="logo" width="246" height="40">
@@ -33,16 +105,20 @@
 				 ------------------------------------------
 				</h2>
 				<div class="ratings">
-                    <i class="fa fa-star inactive"></i>
-                    <i class="fa fa-star inactive"></i>
-                    <i class="fa fa-star inactive"></i>
-                    <i class="fa fa-star inactive"></i>
-                    <i class="fa fa-star inactive"></i>
-					    
+                    <form name = "rating_form" id = "rating_form" action = '/inputrating' method = 'POST'>
+                        
+                        <span id = "star1"><i class="fa fa-star"></i></span>    
+                        <span id = "star2"><i class="fa fa-star"></i></span>
+                        <span id = "star3"><i class="fa fa-star"></i></span>
+                        <span id = "star4"><i class="fa fa-star"></i></span>
+                        <span id = "star5"><i class="fa fa-star"></i></span>
+                        IMDB Rate: <%=rows[0].vote_average / 2 %>
+                
+                    <input type="hidden" name="ratingval" id="ratingval" value="0" />
+                    <input type="hidden" name="movieId" id="movieId" value="<%=rows[0].movie_id %>" />
+                    </form>
                 </div>
-                <div class="ratings">
-                 Average IMDB Rate: <%=rows[0].vote_average / 2 %>
-                </div>
+
 				<h2>
 				 ------------------------------------------
 				</h2>
@@ -157,6 +233,8 @@
 
     </section>
 	
+
+
     <footer id="main_footer">
         <p class="logo">movieradar</p>
         <p class="copyright">&copy;2019 movieradar. All Right Reserved.</p>
