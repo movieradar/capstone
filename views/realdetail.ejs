@@ -88,7 +88,11 @@
             <nav id="main_nav">
                 <a href="/homepage">Home</a>
                 <a href="#">Category</a>
-                <a href="#">Sign in/out</a>
+            <% if(typeof sess.login == 'undefined'){ %>
+                <a href="/signin">Sign in/out</a>
+            <% } else { %>
+                <a href="/logout">Sign in/out</a>
+            <% } %>
             </nav>
         </div>
     </header>
@@ -96,7 +100,13 @@
 	<section id="banner" class="clearfix">
         <div id="banner_content_wrapper">
             <div id="trailer">
-                    <iframe width="672" height="378" src="<%= rows[0].trailer_url %>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <% if(youtube != ''){ %>
+                    <iframe width="672" height="378" src="<%= youtube %>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <% } else { %>
+                    
+                    <img src="<%= rows[0].poster_path %>" alt="Movie Poster">
+                    
+                <% } %>
 			
             </div>
             <div id="content">

@@ -9,6 +9,9 @@ const pool = new Pool({
 
 console.log("connected!");
 
+var https = require('https');
+var request = require('request');
+
 /*
 (async () => {
   console.log('starting async query');
@@ -130,7 +133,37 @@ function trydetail(req, res){
 	//req.session.movie_id = movieId;
 	//var commentNow = ['Deadpool is a hilariously entertaining film that works mainly because of Reynolds himself. His comedic skills pay off gloriously as the titular character, who gives so many quips in one instance that some jokes will be missed.'];
 	var detail_and_comment = [];
-	pool.query('select m.movie_id, m.vote_average, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from movies m where m.movie_id = $1;', [movieId],(error, results) => {
+
+	var preaddress = "https://api.themoviedb.org/3/movie/";
+	
+	//var movie_id = request.params.movieId;
+	var subaddress = "/videos?api_key=03eed2593faed4e618103ac16cfcaecc";
+	var address = preaddress + movieId + subaddress;
+	var youtube = '';
+	console.log(address);
+	//console.log(result);
+	var trailer = [];
+	https.get(address, (res) => {
+	  //console.log('statusCode:', res.statusCode);
+	  //console.log('headers:', res.headers);
+
+	  res.on('data', (d) => {
+	    process.stdout.write(d);
+	    var preyoutube = "https://www.youtube.com/embed/";
+	    console.log("key= " + JSON.parse(d));
+	    var parsedData = JSON.parse(d);
+	    if(typeof(parsedData['results']) !='undefined' && typeof(parsedData['results'][0]) !='undefined' && typeof(parsedData['results'][0]['key']) != 'undefined'){
+	    	youtube = preyoutube + parsedData['results'][0]['key'];
+	    	console.log("youtube trailer:" + youtube);
+	    }
+	    
+	  });
+
+	}).on('error', (e) => {
+	  console.error(e);
+	});
+
+	pool.query('select m.movie_id, m.poster_path, m.vote_average, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from movies m where m.movie_id = $1;', [movieId],(error, results) => {
 		if (error) {
 			console.log(error);
 			throw error;
@@ -143,15 +176,15 @@ function trydetail(req, res){
 			//req.session.kimiewant = results.rows; //not working. cannot store sth into req
 			//var rating = rows[0].vote_average / 2;
 			var rows = results.rows;
-			console.log("first query rows:" + rows);
+			//console.log("first query rows:" + rows);
 			detail_and_comment.push(rows);
 			pool.query('select r.recommended_movie_id, m.poster_path, m.title, m.runtime from movies m, (select recommended_movie_id from recommendations_movie where movie_id = $1) as r where r.recommended_movie_id = m.movie_id;', [movieId],(error, results) => {
 				if(error){
 					console.log(error);
 					throw error;
 				} else {
-					console.log("recommended movies:" + results.rows);
-					console.log("detail and comment:" + detail_and_comment[0]);
+					//console.log("recommended movies:" + results.rows);
+					//console.log("detail and comment:" + detail_and_comment[0]);
 					var recommmendmovies = results.rows;
 					detail_and_comment.push(recommmendmovies);
 					//console.log(rows);
@@ -164,8 +197,8 @@ function trydetail(req, res){
 						} else {
 							console.log("third query this movie comments " + results.rows);
 							var commentNow = results.rows;
-							detail_and_comment.push(commentNow);
-							res.render("realdetail.ejs", {movieId: movieId, rows:rows, recommmendmovies:recommmendmovies, commentNow:commentNow});
+							//detail_and_comment.push(commentNow);
+							res.render("realdetail.ejs", {movieId: movieId, rows:rows, recommmendmovies:recommmendmovies, commentNow:commentNow, sess:req.session, youtube: youtube});
 						}
 
 
@@ -325,6 +358,92 @@ const tryPassFunction = (request, response) => {
 	console.log("yay! Kimie!");
 }
 
+const tryGetTrailer = (req, response) => {
+	var preaddress = "https://api.themoviedb.org/3/movie/";
+	var movie_id = 5;
+	//var movie_id = request.params.movieId;
+	var subaddress = "/videos?api_key=03eed2593faed4e618103ac16cfcaecc";
+	var address = preaddress + movie_id + subaddress;
+	var result = [];
+	console.log(address);
+	//console.log(result);
+	
+	request(address,function(error, response, body){
+		if(error){
+			console.log("Something wrong");
+			console.log(error);
+		}
+		else if (!error && response.statusCode === 200) {
+        	var data = JSON.parse(body);
+        	if(typeof data['results'][0]['key']!= undefined){
+        		var subfix = data['results'][0]['key'];
+        		
+        	} 
+        	
+
+    	}
+	});
+
+	/*
+	fetch(request)
+	  .then(response => {
+	    if (response.status === 200) {
+	      return response.json();
+	    } else {
+	      throw new Error('Something went wrong on api server!');
+	    }
+	  })
+	  .then(response => {
+	    console.debug(response);
+	    // ...
+	  }).catch(error => {
+	    console.error(error);
+	  });
+	 */
+	/*
+	https.get(address, (res) => {
+	  console.log('statusCode:', res.statusCode);
+	  console.log('headers:', res.headers);
+
+	  res.on('data', (d) => {
+	    process.stdout.write(d);
+	    console.log("\n-----------\n");
+	    var preyoutube = "https://www.youtube.com/embed/";
+	    //console.log("\n This is d: \n" + d);
+	    console.log(JSON.parse(d).explanation);
+	    //var jsonfile = res;
+	    //console.log(jsonfile);
+	    //var youtube = preyoutube + d[0].key;
+	    result.push(d);
+	    console.log(result[0]);
+	  });
+
+	}).on('error', (e) => {
+	  console.error(e);
+	});
+	*/
+	/*
+	https.get(address, (resp) => {
+		  
+		  let data = '';
+		  console.log("data now is " + data);
+		  // A chunk of data has been recieved.
+		  resp.on('data', (chunk) => {
+		    data += chunk;
+		  });
+
+		  // The whole response has been received. Print out the result.
+		  resp.on('end', () => {
+		    console.log(JSON.parse(data).explanation);
+		  });
+
+	}).on("error", (err) => {
+			console.log("Error: " + err.message);
+		  });
+	response.render()
+	*/
+}
+
 
 
 
@@ -339,7 +458,8 @@ module.exports = {
 	getRecommendMovies,
 	searchMovieByKey,
 	tryPassFunction,
-	inputrating
+	inputrating,
+	tryGetTrailer
 }
 
 //pool.end().then(() => console.log('pool has ended'))

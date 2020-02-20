@@ -25,6 +25,9 @@ var $ = jQuery = require('jquery')(window);
 
 
 
+
+
+
 app.use(session({ secret: 'keyboard kimie', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true}));
 /* 另一个session的写法 https://github.com/expressjs/session/issues/56
 app.use(session({
@@ -103,6 +106,8 @@ app.get('/tryratingdetail', (req, res) => {
 	
 	res.render("tryratingdetail.ejs", {db:db});
 });
+
+app.get('/trygettrailer',db.tryGetTrailer);
 
 
 // 备用的detail route，迟早要换成这个

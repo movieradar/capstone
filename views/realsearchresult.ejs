@@ -116,7 +116,11 @@ ul.category-nav li.nav-section {
             <nav id="main_nav">
                 <a href="/homepage">Home</a>
                 <a href="#">Category</a>
-                <a href="#">Sign in/out</a>
+            <% if(typeof sess.login == 'undefined'){ %>
+                <a href="/signin">Sign in/out</a>
+            <% } else { %>
+                <a href="/logout">Sign in/out</a>
+            <% } %>
             </nav>
         </div>
 

@@ -114,9 +114,13 @@ ul.category-nav li.nav-section {
         <div class="wrapper">
             <img src="logoblack.png" alt="" class="logo" width="246" height="40">
             <nav id="main_nav">
-                <a href="#">Home</a>
+                <a href="/homepage">Home</a>
                 <a href="#">Category</a>
-                <a href="#">Sign in/out</a>
+            <% if(typeof sess.login == 'undefined'){ %>
+                <a href="/signin">Sign in/out</a>
+            <% } else { %>
+                <a href="/logout">Sign in/out</a>
+            <% } %>
             </nav>
         </div>
 
