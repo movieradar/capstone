@@ -65,6 +65,7 @@ const signin = (request, response) => {
 			console.log(results);
 			request.session.login = true;
 			request.session.user_id = results.rows[0].user_id;
+			request.session.user_name = results.rows[0].user_name;
 			response.redirect('/homepage');
 		}
     });
@@ -73,6 +74,7 @@ const signin = (request, response) => {
 const logout = (request, response) => {
 	delete request.session.login;
 	delete request.session.user_id;
+	delete request.session.user_name;
 	
 	response.redirect('/homepage');
 };
@@ -197,6 +199,18 @@ function trydetail(req, res){
 						} else {
 							console.log("third query this movie comments " + results.rows);
 							var commentNow = results.rows;
+							if(commentNow.length != 0){
+								console.log(commentNow[0].created_at);
+								var parsedTime = commentNow[0].created_at;
+								var time = parsedTime.toTimeString();
+								var date = parsedTime.toDateString();
+								var fulltime = commentNow[0].created_at.toString();
+								//var time = fulltime.slice(12,20);
+								//var date = fulltime.slice(0,12);
+								console.log("fulltime" + fulltime);
+								console.log("time" + time);
+								console.log("date" + date);
+							}
 							//detail_and_comment.push(commentNow);
 							res.render("realdetail.ejs", {movieId: movieId, rows:rows, recommmendmovies:recommmendmovies, commentNow:commentNow, sess:req.session, youtube: youtube});
 						}
@@ -335,9 +349,7 @@ const inputrating = (request, response) => {
 	
 	if (typeof request.session.user_id != "undefined") {
 		user_id = parseInt(request.session.user_id);
-	} else {
-		user_id = 1;
-	}
+	} 
 	//console.log(userName);
    pool.query('INSERT INTO public.ratings (movie_id, user_id, rating) VALUES ($1, $2, $3)', [movieId, user_id, ratingval], (error, results) => {
 		if (error) {

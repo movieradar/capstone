@@ -209,17 +209,22 @@
                          <!-- inc. date and time -->
                          <div class="comment_details">
                              <ul>
-                                 <li><i class="fa fa-clock-o"></i> 13:94</li>
-                                 <li><i class="fa fa-calendar"></i> 04/01/2015</li>
-                                 <li><i class="fa fa-pencil"></i> <span class="user">User ID: <%= commentNow[i].user_id%></span></li>
+                                 <li><i class="fa fa-calendar"></i> <%= commentNow[i].created_at.toDateString()%></li>
+                                 <li><i class="fa fa-clock-o"></i> <%= commentNow[i].created_at.toTimeString()%></li>
+                                 <% if(typeof commentNow[i].user_id != 'undefined' && commentNow[i].user_id != 1){ %>
+                                 <li><i class="fa fa-pencil"></i> <span class="user"> User ID: <%= commentNow[i].user_id%></span></li>
+                                 <% } else { %>
+                                 <li><i class="fa fa-pencil"></i> <span class="user"> User ID: Guest</span></li>
+                                  <% } %>
                              </ul>
                          </div><!-- inc. share/reply and love --><div class="comment_tools">
-                             
+                             <!--
                              <ul>
                                  <li><i class="fa fa-share-alt"></i></li>
                                  <li><i class="fa fa-reply"></i></li>
                                  <li><i class="fa fa-heart love"></i><span class="love_amt"> 4039</span></li>
                              </ul>
+                            -->
                          </div>
     
                      </div>
