@@ -211,7 +211,7 @@
                              <ul>
                                  <li><i class="fa fa-calendar"></i> <%= commentNow[i].created_at.toDateString()%></li>
                                  <li><i class="fa fa-clock-o"></i> <%= commentNow[i].created_at.toTimeString()%></li>
-                                 <% if(typeof commentNow[i].user_id != 'undefined' && commentNow[i].user_id != 1){ %>
+                                 <% if(typeof commentNow[i].user_id != 'undefined'){ %>
                                  <li><i class="fa fa-pencil"></i> <span class="user"> User ID: <%= commentNow[i].user_id%></span></li>
                                  <% } else { %>
                                  <li><i class="fa fa-pencil"></i> <span class="user"> User ID: Guest</span></li>

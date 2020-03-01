@@ -95,10 +95,7 @@ app.get('/detail', (req, res) => {
 	res.render("detail.ejs");
 });
 
-app.get('/searchresult', (req, res) => {
-	
-	res.render("searchresult.ejs");
-});
+
 
 app.post('/searchresult', db.searchMovieByKey);
 

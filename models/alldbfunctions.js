@@ -165,7 +165,9 @@ function trydetail(req, res){
 	  console.error(e);
 	});
 
-	pool.query('select m.movie_id, m.poster_path, m.vote_average, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from movies m where m.movie_id = $1;', [movieId],(error, results) => {
+	if (typeof req.session.user_id == 'undefined') {
+
+		pool.query('select m.movie_id, m.poster_path, m.vote_average, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from movies m where m.movie_id = $1;', [movieId],(error, results) => {
 		if (error) {
 			console.log(error);
 			throw error;
@@ -223,7 +225,71 @@ function trydetail(req, res){
 			
 			
 		}
-  	});	
+  	});	 // end of pool.query
+	}// end of if user_id == undefined statemenet
+	else {
+		pool.query('select m.movie_id, m.poster_path, m.vote_average, m.original_title, m.overview, m.director, m.spoken_languages, m.casting, m.runtime, m.genres from movies m where m.movie_id = $1;', [movieId],(error, results) => {
+		if (error) {
+			console.log(error);
+			throw error;
+		} else {
+			//console.log(results.rows);
+			//rows = results.rows;
+			var title = results.rows[0].original_title;
+			//console.log(results.rows[0].recommended_movie_id)
+			//console.log(title);
+			//req.session.kimiewant = results.rows; //not working. cannot store sth into req
+			//var rating = rows[0].vote_average / 2;
+			var rows = results.rows;
+			//console.log("first query rows:" + rows);
+			detail_and_comment.push(rows);
+			var user_id = req.session.user_id;
+			pool.query('select r.recommended_movie_id, m.poster_path, m.title, m.runtime from movies m, (select recommended_movie_id from recommendations_movie_rating where movie_id = $1 and user_id = $2) as r where r.recommended_movie_id = m.movie_id;', [movieId, user_id],(error, results) => {
+				if(error){
+					console.log(error);
+					throw error;
+				} else {
+					//console.log("recommended movies:" + results.rows);
+					//console.log("detail and comment:" + detail_and_comment[0]);
+					var recommmendmovies = results.rows;
+					detail_and_comment.push(recommmendmovies);
+					//console.log(rows);
+					//console.log(rows2);
+					//console.log("detail and comment" + detail_and_comment);
+					pool.query('select * from comments where movie_id = $1;', [movieId],(error, results) => {
+						if(error){
+							console.log(error);
+							throw error;
+						} else {
+							console.log("third query this movie comments " + results.rows);
+							var commentNow = results.rows;
+							if(commentNow.length != 0){
+								console.log(commentNow[0].created_at);
+								var parsedTime = commentNow[0].created_at;
+								var time = parsedTime.toTimeString();
+								var date = parsedTime.toDateString();
+								var fulltime = commentNow[0].created_at.toString();
+								//var time = fulltime.slice(12,20);
+								//var date = fulltime.slice(0,12);
+								console.log("fulltime" + fulltime);
+								console.log("time" + time);
+								console.log("date" + date);
+							}
+							//detail_and_comment.push(commentNow);
+							res.render("realdetail.ejs", {movieId: movieId, rows:rows, recommmendmovies:recommmendmovies, commentNow:commentNow, sess:req.session, youtube: youtube});
+						}
+
+
+					});
+				}
+
+			});
+			
+			
+		}
+  	});	 // end of pool.query
+	} // end of else statement of user_id undefined
+	
 	//console.log(rows);
 	//var rows = req.session.kimiewant;
 	//console.log(req);
