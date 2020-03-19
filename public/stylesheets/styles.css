@@ -82,6 +82,7 @@
   }
   #top_header {
     padding-top: 1.5em;
+	padding-bottom: 1.5em;
   }
   #top_header .logo {
     float: left;
@@ -118,7 +119,9 @@
   #banner #trailer {
     position: relative;
     float: left;
+	 
   }
+
   #banner #content {
     float: left;
     width: 500px;
@@ -178,11 +181,12 @@
   }
  #top_movies .row {
     width: 100%;
+	margin-left: 4%;
   }
   #top_movies .row .post {
     width: 15%;
     float: left;
-    margin-left: 1%;
+    padding-left: 1%;
   }
   #top_movies .row .post img {
     width: 100%;

@@ -15,12 +15,13 @@
     <header id ="top_header" class="clearfix">
 		
         <div class="wrapper">
-			<% if(typeof sess.login == 'undefined'){ %>
+            <% if(typeof sess.login == 'undefined'){ %>
     		
-				<h1> <%= sess.flashVisitor %></h1>
+				<h4> <%= sess.flashVisitor %></h4>
    			 <% } %>
             <img src="logoblack.png" alt="" class="logo" width="246" height="40">
-            <nav id="main_nav">
+
+			<nav id="main_nav">
                 <a href="/homepage">Home</a>
                 <a href="#">Category</a>
 			<% if(typeof sess.login == 'undefined'){ %>
